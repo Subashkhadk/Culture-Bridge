@@ -1,0 +1,233 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email             String   @unique
+  username          String   @unique
+  password          String
+  name              String?
+  bio               String?  @db.Text
+  avatarUrl         String?
+  coverPhoto        String?
+  country           String?
+  isVerified        Boolean  @default(false)
+  isAdmin           Boolean  @default(false)
+  isPremium         Boolean  @default(false)
+  premiumSince      DateTime?
+  premiumExpiresAt  DateTime?
+  verificationToken String?
+  resetPasswordToken String?
+  resetPasswordExpires DateTime?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  lastLogin         DateTime?
+
+  posts             Post[]
+  comments          Comment[]
+  likes             Like[]
+  bookmarks         Bookmark[]
+  notifications     Notification[]
+  following         Follow[] @relation("followers")
+  followers         Follow[] @relation("following")
+  translations      Translation[]
+  transactions      Transaction[]
+  ads               Ad[]
+  events            Event[]
+  eventRegistrations EventRegistration[]
+  reports           Report[]
+  auditLogs         AuditLog[]
+}
+
+model AuditLog {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId      String   @db.Uuid
+  action      String
+  details     String?  @db.Text
+  ipAddress   String?
+  userAgent   String?
+  createdAt   DateTime @default(now())
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Report {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  reporterId  String   @db.Uuid
+  targetType  String   // 'post', 'comment', 'user'
+  targetId    String   @db.Uuid
+  reason      String
+  description String?  @db.Text
+  status      String   @default("pending") // pending, reviewed, dismissed, blocked
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  reporter    User     @relation(fields: [reporterId], references: [id], onDelete: Cascade)
+}
+
+model Event {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title       String
+  description String?  @db.Text
+  imageUrl    String?
+  location    String?
+  address     String?
+  category    String?
+  startDate   DateTime
+  endDate     DateTime?
+  maxAttendees Int?
+  currentAttendees Int @default(0)
+  isLive      Boolean  @default(false)
+  isApproved  Boolean  @default(false)
+  organizerId String   @db.Uuid
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  organizer   User          @relation(fields: [organizerId], references: [id], onDelete: Cascade)
+  registrations EventRegistration[]
+}
+
+model EventRegistration {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  eventId   String   @db.Uuid
+  userId    String   @db.Uuid
+  status    String   @default("registered")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, userId])
+}
+
+model Post {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title       String
+  content     String   @db.Text
+  imageUrl    String?
+  category    String?
+  country     String?
+  isSponsored Boolean  @default(false)
+  isFlagged   Boolean  @default(false)
+  published   Boolean  @default(true)
+  authorId    String   @db.Uuid
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  author      User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  comments    Comment[]
+  likes       Like[]
+  bookmarks   Bookmark[]
+}
+
+model Comment {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  content   String   @db.Text
+  authorId  String   @db.Uuid
+  postId    String   @db.Uuid
+  isFlagged Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+}
+
+model Like {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String   @db.Uuid
+  postId    String   @db.Uuid
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, postId])
+}
+
+model Bookmark {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String   @db.Uuid
+  postId    String   @db.Uuid
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, postId])
+}
+
+model Follow {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  followerId  String   @db.Uuid
+  followingId String   @db.Uuid
+  createdAt   DateTime @default(now())
+
+  follower    User     @relation(fields: [followerId], references: [id], onDelete: Cascade, name: "followers")
+  following   User     @relation(fields: [followingId], references: [id], onDelete: Cascade, name: "following")
+
+  @@unique([followerId, followingId])
+}
+
+model Notification {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String   @db.Uuid
+  type      String
+  content   String   @db.Text
+  read      Boolean  @default(false)
+  link      String?
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Translation {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  sourceText     String   @db.Text
+  translatedText String   @db.Text
+  sourceLanguage String
+  targetLanguage String
+  userId         String?  @db.Uuid
+  createdAt      DateTime @default(now())
+
+  user           User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+}
+
+model Transaction {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId      String   @db.Uuid
+  amount      Float
+  currency    String   @default("USD")
+  status      String   @default("pending")
+  type        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Ad {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title       String
+  content     String   @db.Text
+  imageUrl    String?
+  linkUrl     String
+  clicks      Int      @default(0)
+  impressions Int      @default(0)
+  isActive    Boolean  @default(true)
+  advertiserId String  @db.Uuid
+  startsAt    DateTime @default(now())
+  endsAt      DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  advertiser  User     @relation(fields: [advertiserId], references: [id], onDelete: Cascade)
+}

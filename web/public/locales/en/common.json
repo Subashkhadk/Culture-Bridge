@@ -1,0 +1,92 @@
+{
+  "app": {
+    "name": "Culture Bridge",
+    "tagline": "Connecting Worlds, Sharing Cultures",
+    "subtitle": "Multicultural · Know Your Culture"
+  },
+  "nav": {
+    "home": "Home",
+    "explore": "Explore",
+    "qa": "Q&A",
+    "events": "Events",
+    "login": "Sign In",
+    "register": "Sign Up",
+    "logout": "Logout",
+    "newPost": "+ New Post",
+    "search": "Search for people..."
+  },
+  "hero": {
+    "title": "Connecting Worlds, Sharing Cultures",
+    "subtitle": "Explore the rich tapestry of human heritage. Exchange stories, master languages, and build lifelong connections across borders.",
+    "search": "Search cultures, traditions...",
+    "exploreBtn": "Explore Now",
+    "badge": "Bridging 195+ Countries"
+  },
+  "feed": {
+    "title": "📚 Culture Feed",
+    "noPosts": "No posts yet",
+    "firstPost": "Be the first to share a cultural story!",
+    "createFirst": "Create Your First Post 🚀",
+    "sponsored": "Sponsored Content",
+    "readMore": "Read more →",
+    "newPost": "📝 New Post",
+    "sponsoredPost": "📢 Sponsored"
+  },
+  "comments": {
+    "title": "Comments",
+    "placeholder": "Write a comment...",
+    "post": "Post",
+    "loginToComment": "Login to comment",
+    "noComments": "No comments yet. Be the first!",
+    "loading": "Loading comments..."
+  },
+  "profile": {
+    "title": "Profile",
+    "posts": "Posts",
+    "followers": "Followers",
+    "following": "Following",
+    "likes": "Likes",
+    "edit": "Edit Profile",
+    "logout": "Logout",
+    "newPost": "+ New Post",
+    "noPosts": "No posts yet",
+    "shareFirst": "Share your first cultural story!"
+  },
+  "auth": {
+    "login": "Login",
+    "register": "Register",
+    "email": "Email",
+    "password": "Password",
+    "username": "Username",
+    "fullName": "Full Name",
+    "welcomeBack": "Welcome back!",
+    "createAccount": "Create your account",
+    "noAccount": "Don't have an account?",
+    "haveAccount": "Already have an account?"
+  },
+  "premium": {
+    "title": "💎 Premium Membership",
+    "subtitle": "Unlock exclusive features and support the Culture Bridge community",
+    "monthly": "Monthly Premium",
+    "yearly": "Yearly Premium",
+    "subscribe": "Subscribe",
+    "cancel": "Cancel Subscription",
+    "features": {
+      "unlimited": "Unlimited posts",
+      "adFree": "Ad-free experience",
+      "priority": "Priority support",
+      "analytics": "Advanced analytics",
+      "badge": "Custom profile badge",
+      "early": "Early access to features"
+    }
+  },
+  "language": {
+    "select": "Select Language",
+    "en": "English",
+    "ja": "日本語",
+    "es": "Español",
+    "fr": "Français",
+    "zh": "中文",
+    "ko": "한국어"
+  }
+}

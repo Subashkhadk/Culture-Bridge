@@ -1,0 +1,92 @@
+{
+  "app": {
+    "name": "Culture Bridge",
+    "tagline": "Conectando Mundos, Compartiendo Culturas",
+    "subtitle": "Multicultural · Conoce Tu Cultura"
+  },
+  "nav": {
+    "home": "Inicio",
+    "explore": "Explorar",
+    "qa": "Preguntas",
+    "events": "Eventos",
+    "login": "Iniciar Sesión",
+    "register": "Registrarse",
+    "logout": "Cerrar Sesión",
+    "newPost": "+ Nueva Publicación",
+    "search": "Buscar personas..."
+  },
+  "hero": {
+    "title": "Conectando Mundos, Compartiendo Culturas",
+    "subtitle": "Explora el rico tapiz del patrimonio humano. Intercambia historias, domina idiomas y construye conexiones duraderas a través de fronteras.",
+    "search": "Buscar culturas, tradiciones...",
+    "exploreBtn": "Explorar Ahora",
+    "badge": "Uniendo 195+ Países"
+  },
+  "feed": {
+    "title": "📚 Feed Cultural",
+    "noPosts": "No hay publicaciones aún",
+    "firstPost": "¡Sé el primero en compartir una historia cultural!",
+    "createFirst": "Crea Tu Primera Publicación 🚀",
+    "sponsored": "Contenido Patrocinado",
+    "readMore": "Leer más →",
+    "newPost": "📝 Nueva Publicación",
+    "sponsoredPost": "📢 Patrocinado"
+  },
+  "comments": {
+    "title": "Comentarios",
+    "placeholder": "Escribe un comentario...",
+    "post": "Publicar",
+    "loginToComment": "Inicia sesión para comentar",
+    "noComments": "No hay comentarios aún. ¡Sé el primero!",
+    "loading": "Cargando comentarios..."
+  },
+  "profile": {
+    "title": "Perfil",
+    "posts": "Publicaciones",
+    "followers": "Seguidores",
+    "following": "Siguiendo",
+    "likes": "Me gusta",
+    "edit": "Editar Perfil",
+    "logout": "Cerrar Sesión",
+    "newPost": "+ Nueva Publicación",
+    "noPosts": "No hay publicaciones aún",
+    "shareFirst": "¡Comparte tu primera historia cultural!"
+  },
+  "auth": {
+    "login": "Iniciar Sesión",
+    "register": "Registrarse",
+    "email": "Correo Electrónico",
+    "password": "Contraseña",
+    "username": "Nombre de Usuario",
+    "fullName": "Nombre Completo",
+    "welcomeBack": "¡Bienvenido de vuelta!",
+    "createAccount": "Crea tu cuenta",
+    "noAccount": "¿No tienes una cuenta?",
+    "haveAccount": "¿Ya tienes una cuenta?"
+  },
+  "premium": {
+    "title": "💎 Membresía Premium",
+    "subtitle": "Desbloquea funciones exclusivas y apoya a la comunidad de Culture Bridge",
+    "monthly": "Premium Mensual",
+    "yearly": "Premium Anual",
+    "subscribe": "Suscribirse",
+    "cancel": "Cancelar Suscripción",
+    "features": {
+      "unlimited": "Publicaciones ilimitadas",
+      "adFree": "Experiencia sin anuncios",
+      "priority": "Soporte prioritario",
+      "analytics": "Análisis avanzado",
+      "badge": "Insignia de perfil personalizada",
+      "early": "Acceso anticipado a funciones"
+    }
+  },
+  "language": {
+    "select": "Seleccionar Idioma",
+    "en": "English",
+    "ja": "日本語",
+    "es": "Español",
+    "fr": "Français",
+    "zh": "中文",
+    "ko": "한국어"
+  }
+}
