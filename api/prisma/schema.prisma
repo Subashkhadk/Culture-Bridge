@@ -42,69 +42,6 @@ model User {
   events             Event[]
   eventRegistrations EventRegistration[]
   reports            Report[]
-  auditLogs          AuditLog[]
-}
-
-model AuditLog {
-  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  userId    String   @db.Uuid
-  action    String
-  details   String?  @db.Text
-  ipAddress String?
-  userAgent String?
-  createdAt DateTime @default(now())
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model Report {
-  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  reporterId  String   @db.Uuid
-  targetType  String // 'post', 'comment', 'user'
-  targetId    String   @db.Uuid
-  reason      String
-  description String?  @db.Text
-  status      String   @default("pending") // pending, reviewed, dismissed, blocked
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  reporter User @relation(fields: [reporterId], references: [id], onDelete: Cascade)
-}
-
-model Event {
-  id               String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  title            String
-  description      String?   @db.Text
-  imageUrl         String?
-  location         String?
-  address          String?
-  category         String?
-  startDate        DateTime
-  endDate          DateTime?
-  maxAttendees     Int?
-  currentAttendees Int       @default(0)
-  isLive           Boolean   @default(false)
-  isApproved       Boolean   @default(false)
-  organizerId      String    @db.Uuid
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
-
-  organizer     User                @relation(fields: [organizerId], references: [id], onDelete: Cascade)
-  registrations EventRegistration[]
-}
-
-model EventRegistration {
-  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  eventId   String   @db.Uuid
-  userId    String   @db.Uuid
-  status    String   @default("registered")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([eventId, userId])
 }
 
 model Post {
@@ -230,4 +167,54 @@ model Ad {
   updatedAt    DateTime  @updatedAt
 
   advertiser User @relation(fields: [advertiserId], references: [id], onDelete: Cascade)
+}
+
+model Event {
+  id               String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title            String
+  description      String?   @db.Text
+  imageUrl         String?
+  location         String?
+  address          String?
+  category         String?
+  startDate        DateTime
+  endDate          DateTime?
+  maxAttendees     Int?
+  currentAttendees Int       @default(0)
+  isLive           Boolean   @default(false)
+  isApproved       Boolean   @default(false)
+  organizerId      String    @db.Uuid
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  organizer     User                @relation(fields: [organizerId], references: [id], onDelete: Cascade)
+  registrations EventRegistration[]
+}
+
+model EventRegistration {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  eventId   String   @db.Uuid
+  userId    String   @db.Uuid
+  status    String   @default("registered")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, userId])
+}
+
+model Report {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  reporterId  String   @db.Uuid
+  targetType  String
+  targetId    String   @db.Uuid
+  reason      String
+  description String?  @db.Text
+  status      String   @default("pending")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  reporter User @relation(fields: [reporterId], references: [id], onDelete: Cascade)
 }
