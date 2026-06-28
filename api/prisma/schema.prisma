@@ -8,59 +8,59 @@ datasource db {
 }
 
 model User {
-  id                String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  email             String   @unique
-  username          String   @unique
-  password          String
-  name              String?
-  bio               String?  @db.Text
-  avatarUrl         String?
-  coverPhoto        String?
-  country           String?
-  isVerified        Boolean  @default(false)
-  isAdmin           Boolean  @default(false)
-  isPremium         Boolean  @default(false)
-  premiumSince      DateTime?
-  premiumExpiresAt  DateTime?
-  verificationToken String?
-  resetPasswordToken String?
+  id                   String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email                String    @unique
+  username             String    @unique
+  password             String
+  name                 String?
+  bio                  String?   @db.Text
+  avatarUrl            String?
+  coverPhoto           String?
+  country              String?
+  isVerified           Boolean   @default(false)
+  isAdmin              Boolean   @default(false)
+  isPremium            Boolean   @default(false)
+  premiumSince         DateTime?
+  premiumExpiresAt     DateTime?
+  verificationToken    String?
+  resetPasswordToken   String?
   resetPasswordExpires DateTime?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-  lastLogin         DateTime?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+  lastLogin            DateTime?
 
-  posts             Post[]
-  comments          Comment[]
-  likes             Like[]
-  bookmarks         Bookmark[]
-  notifications     Notification[]
-  following         Follow[] @relation("followers")
-  followers         Follow[] @relation("following")
-  translations      Translation[]
-  transactions      Transaction[]
-  ads               Ad[]
-  events            Event[]
+  posts              Post[]
+  comments           Comment[]
+  likes              Like[]
+  bookmarks          Bookmark[]
+  notifications      Notification[]
+  following          Follow[]            @relation("followers")
+  followers          Follow[]            @relation("following")
+  translations       Translation[]
+  transactions       Transaction[]
+  ads                Ad[]
+  events             Event[]
   eventRegistrations EventRegistration[]
-  reports           Report[]
-  auditLogs         AuditLog[]
+  reports            Report[]
+  auditLogs          AuditLog[]
 }
 
 model AuditLog {
-  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  userId      String   @db.Uuid
-  action      String
-  details     String?  @db.Text
-  ipAddress   String?
-  userAgent   String?
-  createdAt   DateTime @default(now())
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String   @db.Uuid
+  action    String
+  details   String?  @db.Text
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
 
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Report {
   id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   reporterId  String   @db.Uuid
-  targetType  String   // 'post', 'comment', 'user'
+  targetType  String // 'post', 'comment', 'user'
   targetId    String   @db.Uuid
   reason      String
   description String?  @db.Text
@@ -68,28 +68,28 @@ model Report {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  reporter    User     @relation(fields: [reporterId], references: [id], onDelete: Cascade)
+  reporter User @relation(fields: [reporterId], references: [id], onDelete: Cascade)
 }
 
 model Event {
-  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  title       String
-  description String?  @db.Text
-  imageUrl    String?
-  location    String?
-  address     String?
-  category    String?
-  startDate   DateTime
-  endDate     DateTime?
-  maxAttendees Int?
-  currentAttendees Int @default(0)
-  isLive      Boolean  @default(false)
-  isApproved  Boolean  @default(false)
-  organizerId String   @db.Uuid
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id               String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title            String
+  description      String?   @db.Text
+  imageUrl         String?
+  location         String?
+  address          String?
+  category         String?
+  startDate        DateTime
+  endDate          DateTime?
+  maxAttendees     Int?
+  currentAttendees Int       @default(0)
+  isLive           Boolean   @default(false)
+  isApproved       Boolean   @default(false)
+  organizerId      String    @db.Uuid
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
 
-  organizer   User          @relation(fields: [organizerId], references: [id], onDelete: Cascade)
+  organizer     User                @relation(fields: [organizerId], references: [id], onDelete: Cascade)
   registrations EventRegistration[]
 }
 
@@ -101,8 +101,8 @@ model EventRegistration {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([eventId, userId])
 }
@@ -121,10 +121,10 @@ model Post {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  author      User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  comments    Comment[]
-  likes       Like[]
-  bookmarks   Bookmark[]
+  author    User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  comments  Comment[]
+  likes     Like[]
+  bookmarks Bookmark[]
 }
 
 model Comment {
@@ -136,8 +136,8 @@ model Comment {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  author User @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  post   Post @relation(fields: [postId], references: [id], onDelete: Cascade)
 }
 
 model Like {
@@ -146,8 +146,8 @@ model Like {
   postId    String   @db.Uuid
   createdAt DateTime @default(now())
 
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
 
   @@unique([userId, postId])
 }
@@ -158,8 +158,8 @@ model Bookmark {
   postId    String   @db.Uuid
   createdAt DateTime @default(now())
 
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
 
   @@unique([userId, postId])
 }
@@ -170,8 +170,8 @@ model Follow {
   followingId String   @db.Uuid
   createdAt   DateTime @default(now())
 
-  follower    User     @relation(fields: [followerId], references: [id], onDelete: Cascade, name: "followers")
-  following   User     @relation(fields: [followingId], references: [id], onDelete: Cascade, name: "following")
+  follower  User @relation(fields: [followerId], references: [id], onDelete: Cascade, name: "followers")
+  following User @relation(fields: [followingId], references: [id], onDelete: Cascade, name: "following")
 
   @@unique([followerId, followingId])
 }
@@ -185,7 +185,7 @@ model Notification {
   link      String?
   createdAt DateTime @default(now())
 
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Translation {
@@ -197,7 +197,7 @@ model Translation {
   userId         String?  @db.Uuid
   createdAt      DateTime @default(now())
 
-  user           User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
 }
 
 model Transaction {
@@ -211,23 +211,23 @@ model Transaction {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Ad {
-  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  title       String
-  content     String   @db.Text
-  imageUrl    String?
-  linkUrl     String
-  clicks      Int      @default(0)
-  impressions Int      @default(0)
-  isActive    Boolean  @default(true)
-  advertiserId String  @db.Uuid
-  startsAt    DateTime @default(now())
-  endsAt      DateTime?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title        String
+  content      String    @db.Text
+  imageUrl     String?
+  linkUrl      String
+  clicks       Int       @default(0)
+  impressions  Int       @default(0)
+  isActive     Boolean   @default(true)
+  advertiserId String    @db.Uuid
+  startsAt     DateTime  @default(now())
+  endsAt       DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 
-  advertiser  User     @relation(fields: [advertiserId], references: [id], onDelete: Cascade)
+  advertiser User @relation(fields: [advertiserId], references: [id], onDelete: Cascade)
 }
