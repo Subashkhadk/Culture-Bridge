@@ -67,29 +67,57 @@ export default function HomePage() {
   const [followingIds, setFollowingIds] = useState<string[]>([]);
   const [registeredEvents, setRegisteredEvents] = useState<Set<string>>(new Set());
 
+  // Get API URL with fallback
+  const getApiUrl = () => {
+    if (typeof window !== 'undefined') {
+      // Use environment variable or fallback to localhost
+      return process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api';
+    }
+    return 'http://localhost:5001/api';
+  };
+
+  const API_URL = getApiUrl();
+
   // Fetch events
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/events?upcoming=true&limit=10`);
-        if (response.ok) {
-          const data = await response.json();
-          setEvents(data.events || []);
+        const url = `${API_URL}/events?upcoming=true&limit=10`;
+        console.log('📡 Fetching events from:', url);
+        
+        const response = await fetch(url, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        
+        if (!response.ok) {
+          console.warn('⚠️ Events API returned:', response.status);
+          setEvents([]);
+          return;
         }
+        
+        const data = await response.json();
+        console.log('✅ Events fetched:', data.events?.length || 0);
+        setEvents(data.events || []);
       } catch (error) {
-        console.error('Error fetching events:', error);
+        console.error('❌ Error fetching events:', error);
+        // Don't show error to user, just use empty events
+        setEvents([]);
       }
     };
 
     fetchEvents();
-  }, []);
+  }, [API_URL]);
 
   // Fetch registered events for current user
   useEffect(() => {
     const fetchRegisteredEvents = async () => {
       if (!user || !token) return;
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/events/my-events`, {
+        const url = `${API_URL}/events/my-events`;
+        const response = await fetch(url, {
           headers: {
             'Authorization': `Bearer ${token}`,
           },
@@ -105,13 +133,16 @@ export default function HomePage() {
     };
 
     fetchRegisteredEvents();
-  }, [user, token]);
+  }, [user, token, API_URL]);
 
   // Fetch all posts
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts`);
+        const url = `${API_URL}/posts`;
+        console.log('📡 Fetching posts from:', url);
+        
+        const response = await fetch(url);
         if (!response.ok) {
           throw new Error('Failed to load posts');
         }
@@ -132,6 +163,7 @@ export default function HomePage() {
         setTrendingPosts(trending);
         
       } catch (err: any) {
+        console.error('❌ Error fetching posts:', err);
         setError(err.message || 'Failed to load posts');
       } finally {
         setIsLoading(false);
@@ -139,7 +171,7 @@ export default function HomePage() {
     };
 
     fetchPosts();
-  }, []);
+  }, [API_URL]);
 
   // Fetch following list and following posts
   useEffect(() => {
@@ -148,7 +180,7 @@ export default function HomePage() {
 
       setIsLoadingFollowing(true);
       try {
-        const followingResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/follow/following/${user.id}`, {
+        const followingResponse = await fetch(`${API_URL}/follow/following/${user.id}`, {
           headers: {
             'Authorization': `Bearer ${token}`,
           },
@@ -160,7 +192,7 @@ export default function HomePage() {
           setFollowingIds(ids);
 
           if (ids.length > 0) {
-            const postsResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts`);
+            const postsResponse = await fetch(`${API_URL}/posts`);
             if (postsResponse.ok) {
               const allPosts = await postsResponse.json();
               const filteredPosts = (allPosts.posts || []).filter((post: Post) => 
@@ -180,7 +212,7 @@ export default function HomePage() {
     };
 
     fetchFollowing();
-  }, [user, token]);
+  }, [user, token, API_URL]);
 
   // Handle event registration
   const handleRegister = async (eventId: string) => {
@@ -190,7 +222,7 @@ export default function HomePage() {
     }
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/events/${eventId}/register`, {
+      const response = await fetch(`${API_URL}/events/${eventId}/register`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -199,7 +231,7 @@ export default function HomePage() {
 
       if (response.ok) {
         setRegisteredEvents(prev => new Set(prev).add(eventId));
-        const eventsResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/events?upcoming=true&limit=10`);
+        const eventsResponse = await fetch(`${API_URL}/events?upcoming=true&limit=10`);
         if (eventsResponse.ok) {
           const data = await eventsResponse.json();
           setEvents(data.events || []);
@@ -219,7 +251,7 @@ export default function HomePage() {
     if (!confirm('Are you sure you want to cancel your registration?')) return;
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/events/${eventId}/register`, {
+      const response = await fetch(`${API_URL}/events/${eventId}/register`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -230,7 +262,7 @@ export default function HomePage() {
         const newSet = new Set(registeredEvents);
         newSet.delete(eventId);
         setRegisteredEvents(newSet);
-        const eventsResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/events?upcoming=true&limit=10`);
+        const eventsResponse = await fetch(`${API_URL}/events?upcoming=true&limit=10`);
         if (eventsResponse.ok) {
           const data = await eventsResponse.json();
           setEvents(data.events || []);
